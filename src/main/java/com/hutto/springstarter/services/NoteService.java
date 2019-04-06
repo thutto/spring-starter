@@ -4,15 +4,20 @@ import com.hutto.springstarter.data.note.NoteEntity;
 import com.hutto.springstarter.data.note.NoteRepository;
 import com.hutto.springstarter.models.Filter;
 import com.hutto.springstarter.models.Note;
+import com.hutto.springstarter.utils.MapperUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class NoteService {
 
     private NoteRepository noteRepository;
+
+    @Autowired
+    private MapperUtil mapper;
 
     public NoteService(NoteRepository noteRepository) {
         this.noteRepository = noteRepository;
@@ -25,66 +30,22 @@ public class NoteService {
     public List<Note> getNotes(Filter filter) {
         //TODO:: Add Filter, Pagination, and Sorting
         List<NoteEntity> noteEntities = noteRepository.findAll();
-        List<Note> notes = mapNoteEntitesToNotes(noteEntities);
 
-        return notes;
-
+        return mapper.factory.getMapperFacade().mapAsList(noteEntities, Note.class);
     }
 
-    // TODO Replace with Ortika Mapper
-    private List<Note> mapNoteEntitesToNotes(List<NoteEntity> noteEntities) {
-        List<Note> notes = new ArrayList<>();
-        if(noteEntities != null && !noteEntities.isEmpty()) {
-            for (NoteEntity noteEntity: noteEntities) {
-                Note note = mapNoteEntityToNote(noteEntity);
-                if (note != null) {
-                    notes.add(note);
-                }
-
-            }
-        }
-
-        return notes;
+    public Note getNote(String id) {
+        return mapper.factory.getMapperFacade().map(noteRepository.findById(id).get(), Note.class);
     }
 
-    private Note mapNoteEntityToNote(NoteEntity noteEntity) {
-        if(noteEntity != null) {
-            Note note = new Note();
-            note._id = noteEntity._id;
-            note.id = noteEntity.id;
-            note.note = noteEntity.note;
-            note.createDate = noteEntity.createDate;
-            note.archived = noteEntity.archived;
-            return note;
-        }
-        return null;
-    }
+    public Note saveNote(Note note) {
+        //Set Defaults
+        note.createDate = new Date();
+        note.archived = note.archived != null ? note.archived : false;
 
-    private List<NoteEntity> mapNotesToNoteEntities(List<Note> notes) {
-        List<NoteEntity> noteEntities = new ArrayList<>();
-        if(notes != null && !notes.isEmpty()) {
-            for (Note note: notes) {
-                NoteEntity noteEntity = mapNoteToNoteEntity(note);
-                if (note != null) {
-                    noteEntities.add(noteEntity);
-                }
+        NoteEntity noteEntity = mapper.factory.getMapperFacade().map(note, NoteEntity.class);
+        noteEntity = noteRepository.save(noteEntity);
 
-            }
-        }
-
-        return noteEntities;
-    }
-
-    private NoteEntity mapNoteToNoteEntity(Note note) {
-        if(note != null) {
-            NoteEntity noteEntity = new NoteEntity();
-            noteEntity._id = note._id;
-            noteEntity.id = note.id;
-            noteEntity.note = note.note;
-            noteEntity.createDate = note.createDate;
-            noteEntity.archived = note.archived;
-            return noteEntity;
-        }
-        return null;
+        return mapper.factory.getMapperFacade().map(noteEntity, Note.class);
     }
 }

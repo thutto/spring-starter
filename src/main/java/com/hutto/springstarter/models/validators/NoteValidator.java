@@ -14,15 +14,12 @@ public class NoteValidator implements Validator {
     @Override
     public void validate(Object target, Errors errors) {
         Note note = (Note) target;
-        if(note.id == null) {
-            errors.reject("req_id", "'id' is a required field.");
-        }
 
-        if(note.note == null) {
+        if (note.note == null) {
             errors.reject("req_note", "'note' is a required field.");
         }
 
-        if(note.createDate != null) {
+        if (note.createDate != null) {
             errors.reject("forbidden_createDate", "Create date is a forbidden field");
         }
     }
