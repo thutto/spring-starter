@@ -4,6 +4,7 @@ import lombok.Data;
 import org.bson.types.ObjectId;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 public class Note {
@@ -12,6 +13,7 @@ public class Note {
     public String note;
     public Date createDate;
     public Boolean archived;
+    public List<FieldError> fieldErrors;
 
     @Override
     public String toString() {
@@ -21,6 +23,7 @@ public class Note {
                 ", note='" + note + '\'' +
                 ", createDate=" + createDate +
                 ", archived=" + archived +
+                ", fieldErrors=" + fieldErrors +
                 '}';
     }
 }
