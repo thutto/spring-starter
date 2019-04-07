@@ -1,6 +1,5 @@
 package com.hutto.springstarter;
 
-import com.hutto.springstarter.data.FongoDatasource;
 import com.hutto.springstarter.models.Note;
 import com.hutto.springstarter.models.base.NoteCollection;
 import com.hutto.springstarter.resources.NoteController;
@@ -9,20 +8,24 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.annotation.IfProfileValue;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.core.env.AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME;
 
-@ActiveProfiles("fongo")
+@IfProfileValue(name = ACTIVE_PROFILES_PROPERTY_NAME, value = "it-embedded")
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {SpringStarterApplication.class, FongoDatasource.class}, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@EnableAutoConfiguration
 public class NoteTest {
 
     @LocalServerPort
@@ -33,6 +36,9 @@ public class NoteTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     @Test
     public void contextLoads() {

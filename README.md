@@ -2,12 +2,11 @@
 
 This is a simple playground for me to explore Spring, and Mongo.
 
-## Installation
+## Testing
+./gradlew test -Dspring.profiles.active=it-embedded
 
 
 ## TODO
-* Get Fongo Functioning.
-* Add Test
 * Add Delete
 * Add Update
 * Add Search support
