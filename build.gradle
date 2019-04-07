@@ -27,4 +27,5 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation 'ma.glasnost.orika:orika-core:1.5.4'
+	implementation 'com.github.fakemongo:fongo:2.1.0'
 }

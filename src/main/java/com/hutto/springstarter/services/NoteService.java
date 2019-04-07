@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class NoteService {
@@ -28,6 +29,7 @@ public class NoteService {
     }
 
     public List<Note> getNotes(Filter filter) {
+        //TODO:: Handel No Notes
         //TODO:: Add Filter, Pagination, and Sorting
         List<NoteEntity> noteEntities = noteRepository.findAll();
 
@@ -35,7 +37,12 @@ public class NoteService {
     }
 
     public Note getNote(String id) {
-        return mapper.factory.getMapperFacade().map(noteRepository.findById(id).get(), Note.class);
+        //TODO:: Handel No Notes
+        Optional noteOptional = noteRepository.findById(id);
+        if (noteOptional.isPresent()) {
+            return mapper.factory.getMapperFacade().map(noteOptional.get(), Note.class);
+        }
+        return null;
     }
 
     public Note saveNote(Note note) {

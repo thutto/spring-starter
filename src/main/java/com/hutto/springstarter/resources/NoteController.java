@@ -12,7 +12,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @RestController
 @RequestMapping("/note")
@@ -33,26 +32,32 @@ public class NoteController {
     @GetMapping("/all")
     public @ResponseBody
     ResponseEntity<?> getNotes() {
-        return new ResponseEntity<Base>(new NoteCollection(noteService.getNotes(null)), HttpStatus.OK);
+        return new ResponseEntity<NoteCollection>(new NoteCollection(noteService.getNotes(null)), HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     public @ResponseBody
-    ResponseEntity<?> getNote(@PathVariable @NotNull @Valid String id) {
-        return new ResponseEntity<Base>(noteService.getNote(id), HttpStatus.OK);
+    ResponseEntity<?> getNote(@PathVariable String id) {
+        if (id != null) {
+            Note note = noteService.getNote(id);
+            if (note != null) {
+                return new ResponseEntity<Note>(noteService.getNote(id), HttpStatus.OK);
+            }
+        }
+        // TODO:: Add message and return bad request
+        return new ResponseEntity<Base>(new Base(), HttpStatus.NOT_FOUND);
+
     }
 
     @PostMapping()
     public @ResponseBody
     ResponseEntity<?> saveNote(@RequestBody @Valid Note note, BindingResult result) {
-        System.out.println("note = " + note.toString());
-
         NoteValidator noteValidator = new NoteValidator();
         noteValidator.validate(note, result);
         if (result.hasErrors()) {
             return new ResponseEntity<Base>(new Base(FieldError.buildFieldErrors(result.getAllErrors())), HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<Base>(noteService.saveNote(note), HttpStatus.OK);
+        return new ResponseEntity<Base>(noteService.saveNote(note), HttpStatus.CREATED);
     }
 }

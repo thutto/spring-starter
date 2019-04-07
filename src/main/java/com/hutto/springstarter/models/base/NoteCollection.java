@@ -10,6 +10,9 @@ public class NoteCollection extends BaseCollection {
 
     public List<Note> notes;
 
+    public NoteCollection() {
+    }
+
     public NoteCollection(List<Note> notes) {
         this.notes = notes;
         this.count = notes != null ? notes.size() : 0;

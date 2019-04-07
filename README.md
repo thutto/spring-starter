@@ -6,6 +6,7 @@ This is a simple playground for me to explore Spring, and Mongo.
 
 
 ## TODO
+* Get Fongo Functioning.
 * Add Test
 * Add Delete
 * Add Update
